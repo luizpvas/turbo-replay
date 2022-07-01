@@ -19,3 +19,5 @@ jobs:
         run: bundle install
       - name: run tests
         run: bin/test
+      - name: run linter
+        run: bundle exec rake standard
