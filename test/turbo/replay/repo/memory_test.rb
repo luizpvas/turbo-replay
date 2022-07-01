@@ -48,7 +48,7 @@ class Turbo::Replay::Repo::MemoryTest < ActiveSupport::TestCase
     insert_message
 
     contents_with_sequence_number =
-      get_all_messages()
+      get_all_messages
 
     assert_equal(2, contents_with_sequence_number.length)
 
@@ -67,13 +67,13 @@ class Turbo::Replay::Repo::MemoryTest < ActiveSupport::TestCase
     travel 10.seconds do
       insert_message
 
-      assert_equal(1, get_all_messages().length)
+      assert_equal(1, get_all_messages.length)
     end
   end
 
   test "#get_current_sequence_number - returns zero if broadcasting does NOT have any message" do
     sequence_number =
-      get_current_sequence_number()
+      get_current_sequence_number
 
     assert_equal(0, sequence_number)
   end
@@ -85,7 +85,7 @@ class Turbo::Replay::Repo::MemoryTest < ActiveSupport::TestCase
     insert_message
 
     travel 10.seconds do
-      assert_equal(0, get_current_sequence_number())
+      assert_equal(0, get_current_sequence_number)
     end
   end
 
@@ -94,13 +94,13 @@ class Turbo::Replay::Repo::MemoryTest < ActiveSupport::TestCase
     insert_message
 
     sequence_number =
-      get_current_sequence_number()
+      get_current_sequence_number
 
     assert_equal(2, sequence_number)
   end
 
   test "#get_all_messages - returns an empty list if broadcasting does NOT have any message" do
-    assert_equal([], get_all_messages())
+    assert_equal([], get_all_messages)
   end
 
   test "#get_all_messages - returns an empty list if broadcasting has expired ttl" do
@@ -110,7 +110,7 @@ class Turbo::Replay::Repo::MemoryTest < ActiveSupport::TestCase
     insert_message
 
     travel 10.seconds do
-      assert_equal([], get_all_messages())
+      assert_equal([], get_all_messages)
     end
   end
 
@@ -119,7 +119,7 @@ class Turbo::Replay::Repo::MemoryTest < ActiveSupport::TestCase
     insert_message
 
     contents_with_sequence_number =
-      get_all_messages()
+      get_all_messages
 
     sequence_numbers =
       contents_with_sequence_number.pluck(:sequence_number)

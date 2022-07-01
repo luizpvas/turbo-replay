@@ -1,7 +1,7 @@
 # Configure Rails Environment
 ENV["RAILS_ENV"] = "test"
 
-require 'simplecov'
+require "simplecov"
 SimpleCov.start do
   formatter SimpleCov::Formatter::SimpleFormatter
 end
