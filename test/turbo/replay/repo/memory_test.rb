@@ -26,6 +26,17 @@ class Turbo::Replay::Repo::MemoryTest < ActiveSupport::TestCase
     assert_equal((1..10).to_a, sequence_numbers)
   end
 
+  test "#insert_message - increments different sequence numbers for different broadcastings" do
+    content_with_sequence_number_b1 =
+      @repo.insert_message(broadcasting: "b1", content: "content", retention: @retention)
+
+    content_with_sequence_number_b2 =
+      @repo.insert_message(broadcasting: "b2", content: "content", retention: @retention)
+
+    assert_equal(1, content_with_sequence_number_b1[:sequence_number])
+    assert_equal(1, content_with_sequence_number_b2[:sequence_number])
+  end
+
   test "#insert_message - deletes old messages if cache grows over allowed retention size" do
     @retention.size =
       2
