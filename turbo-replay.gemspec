@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.homepage    = "https://github.com/luizpvas/turbo-replay"
   spec.summary     = "Never miss a single websocket event ever again."
   spec.description = "Turbo-Replay caches events sent to channels and re-sends them in order when clients have flaky network."
-    spec.license     = "MIT"
+  spec.license     = "MIT"
   
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = "https://github.com/luizpvas/turbo-replay"
