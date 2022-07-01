@@ -103,6 +103,17 @@ class Turbo::Replay::Repo::MemoryTest < ActiveSupport::TestCase
     assert_equal([], get_all_messages())
   end
 
+  test "#get_all_messages - returns an empty list if broadcasting has expired ttl" do
+    @retention.ttl =
+      5.seconds
+
+    insert_message
+
+    travel 10.seconds do
+      assert_equal([], get_all_messages())
+    end
+  end
+
   test "#get_all_messages - returns stored messages in the same order they were inserted" do
     insert_message
     insert_message
