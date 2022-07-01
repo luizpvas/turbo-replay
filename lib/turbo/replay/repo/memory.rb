@@ -5,6 +5,7 @@ module Turbo::Replay
         @mutex = Mutex.new
         @counters = {}
         @messages = {}
+        @ttl = {}
       end
 
       def get_current_sequence_number(broadcasting:)
@@ -21,14 +22,16 @@ module Turbo::Replay
 
       def insert_message(broadcasting:, content:, retention:)
         @mutex.synchronize do
+          @ttl[broadcasting] =
+            Time.current + retention.ttl
+
           next_sequence_number =
             (@counters[broadcasting] = @counters.fetch(broadcasting, 0) + 1)
 
           content_with_sequence_number =
             {sequence_number: next_sequence_number, content: content}
 
-          @messages[broadcasting] ||= []
-          @messages[broadcasting].tap do |messages|
+          (@messages[broadcasting] ||= []).tap do |messages|
             messages << content_with_sequence_number
             messages.shift if messages.length > retention.size
           end
