@@ -6,7 +6,7 @@ Gem::Specification.new do |spec|
   spec.authors     = ["Luiz Vasconcellos"]
   spec.email       = ["luizpvasc@gmail.com"]
   spec.homepage    = "https://github.com/luizpvas/turbo-replay"
-  spec.summary     = "Never miss a websocket event again."
+  spec.summary     = "Never miss a single websocket event ever again."
   spec.description = "Turbo-Replay caches events sent to channels and re-sends them in order when clients have flaky network."
     spec.license     = "MIT"
   
