@@ -12,7 +12,8 @@ class Turbo::Replay::ConfigurationTest < ActiveSupport::TestCase
 
     Turbo::Replay::Configuration.new.tap do |config|
       config.retention = retention
-      assert_equal config.retention, retention
+
+      assert_equal(retention, config.retention)
     end
   end
 
@@ -21,6 +22,7 @@ class Turbo::Replay::ConfigurationTest < ActiveSupport::TestCase
 
     Turbo::Replay::Configuration.new.tap do |config|
       config.repo = repo
+
       assert_equal(repo, config.repo)
     end
   end
