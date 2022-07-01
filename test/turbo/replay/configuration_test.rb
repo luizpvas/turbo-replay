@@ -1,7 +1,7 @@
 require "test_helper"
 
 class Turbo::Replay::ConfigurationTest < ActiveSupport::TestCase
-  test "has a single configuration" do
+  test "has a singleton configuration in Turbo::replay" do
     Turbo::Replay.configure do |config|
       assert config.is_a?(Turbo::Replay::Configuration)
     end
