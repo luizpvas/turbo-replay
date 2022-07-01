@@ -14,6 +14,9 @@ module Turbo::Replay
       end
 
       def get_all_messages(broadcasting:)
+        @mutex.synchronize do
+          @messages.fetch(broadcasting, [])
+        end
       end
 
       def insert_message(broadcasting:, content:, retention:)
@@ -25,7 +28,10 @@ module Turbo::Replay
             {sequence_number: next_sequence_number, content: content}
 
           @messages[broadcasting] ||= []
-          @messages[broadcasting] << content_with_sequence_number
+          @messages[broadcasting].tap do |messages|
+            messages << content_with_sequence_number
+            messages.shift if messages.length > retention.size
+          end
 
           content_with_sequence_number
         end

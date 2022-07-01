@@ -26,6 +26,22 @@ class Turbo::Replay::Repo::MemoryTest < ActiveSupport::TestCase
     assert_equal((1..10).to_a, sequence_numbers)
   end
 
+  test "#insert_message - deletes old messages if cache grows over allowed retention size" do
+    @retention.size = 2
+
+    5.times { insert_message }
+
+    contents_with_sequence_number =
+      @repo.get_all_messages(broadcasting: "broadcasting")
+
+    assert_equal 2, contents_with_sequence_number.length
+
+    sequence_numbers =
+      contents_with_sequence_number.pluck(:sequence_number)
+
+    assert_equal [4, 5], sequence_numbers
+  end
+
   test "#get_current_sequence_number - returns zero if broadcasting does NOT have any message" do
     sequence_number =
       @repo.get_current_sequence_number(broadcasting: "broadcasting")
@@ -40,6 +56,22 @@ class Turbo::Replay::Repo::MemoryTest < ActiveSupport::TestCase
       @repo.get_current_sequence_number(broadcasting: "broadcasting")
 
     assert_equal 2, sequence_number
+  end
+
+  test "#get_all_messages - returns an empty list if broadcasting does NOT have any message" do
+    assert_equal [], @repo.get_all_messages(broadcasting: "broadcasting")
+  end
+
+  test "#get_all_messages - returns stored messages in the same order they were inserted" do
+    2.times { insert_message }
+
+    contents_with_sequence_number =
+      @repo.get_all_messages(broadcasting: "broadcasting")
+
+    sequence_numbers =
+      contents_with_sequence_number.pluck(:sequence_number)
+
+    assert_equal [1, 2], sequence_numbers
   end
 
   private
