@@ -43,7 +43,8 @@ class Turbo::Replay::Repo::MemoryTest < ActiveSupport::TestCase
   end
 
   private
-    def insert_message
-      @repo.insert_message(broadcasting: "broadcasting", content: "content", retention: @retention)
-    end
+
+  def insert_message
+    @repo.insert_message(broadcasting: "broadcasting", content: "content", retention: @retention)
+  end
 end
