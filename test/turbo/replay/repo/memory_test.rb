@@ -73,9 +73,20 @@ class Turbo::Replay::Repo::MemoryTest < ActiveSupport::TestCase
 
   test "#get_current_sequence_number - returns zero if broadcasting does NOT have any message" do
     sequence_number =
-      @repo.get_current_sequence_number(broadcasting: "broadcasting")
+      get_current_sequence_number()
 
     assert_equal(0, sequence_number)
+  end
+
+  test "#get_current_sequence_number - returns zero if broadcasting has expired ttl" do
+    @retention.ttl =
+      5.seconds
+
+    insert_message
+
+    travel 10.seconds do
+      assert_equal(0, get_current_sequence_number())
+    end
   end
 
   test "#get_current_sequence_number - returns the current sequence number" do
@@ -83,7 +94,7 @@ class Turbo::Replay::Repo::MemoryTest < ActiveSupport::TestCase
     insert_message
 
     sequence_number =
-      @repo.get_current_sequence_number(broadcasting: "broadcasting")
+      get_current_sequence_number()
 
     assert_equal(2, sequence_number)
   end
@@ -109,6 +120,10 @@ class Turbo::Replay::Repo::MemoryTest < ActiveSupport::TestCase
 
   def insert_message
     @repo.insert_message(broadcasting: "broadcasting", content: "content", retention: @retention)
+  end
+
+  def get_current_sequence_number
+    @repo.get_current_sequence_number(broadcasting: "broadcasting")
   end
 
   def get_all_messages
