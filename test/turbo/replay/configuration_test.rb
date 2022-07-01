@@ -15,4 +15,13 @@ class Turbo::Replay::ConfigurationTest < ActiveSupport::TestCase
       assert_equal config.retention, retention
     end
   end
+
+  test "has repo attribute" do
+    repo = Turbo::Replay::Repo::Memory.new
+
+    Turbo::Replay::Configuration.new.tap do |config|
+      config.repo = repo
+      assert_equal(repo, config.repo)
+    end
+  end
 end

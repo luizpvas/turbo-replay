@@ -11,7 +11,7 @@ module Turbo
     include ActiveSupport::Autoload
 
     class Configuration
-      attr_accessor :retention
+      attr_accessor :repo, :retention
     end
 
     mattr_accessor :configuration
