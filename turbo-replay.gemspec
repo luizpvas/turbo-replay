@@ -21,4 +21,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "rails", ">= 6.0.0"
 
   spec.add_development_dependency "standard", "~> 1.12"
+  spec.add_development_dependency "simplecov", "~> 0.21"
 end
