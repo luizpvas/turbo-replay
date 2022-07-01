@@ -37,7 +37,7 @@ class Turbo::Replay::Repo::MemoryTest < ActiveSupport::TestCase
     insert_message
 
     contents_with_sequence_number =
-      @repo.get_all_messages(broadcasting: "broadcasting")
+      get_all_messages()
 
     assert_equal(2, contents_with_sequence_number.length)
 
@@ -45,6 +45,19 @@ class Turbo::Replay::Repo::MemoryTest < ActiveSupport::TestCase
       contents_with_sequence_number.pluck(:sequence_number)
 
     assert_equal([4, 5], sequence_numbers)
+  end
+
+  test "#insert_message - deletes all messages if ttl expires" do
+    @retention.ttl =
+      5.seconds
+
+    insert_message
+
+    travel 10.seconds do
+      insert_message
+
+      assert_equal(1, get_all_messages().length)
+    end
   end
 
   test "#get_current_sequence_number - returns zero if broadcasting does NOT have any message" do
@@ -65,7 +78,7 @@ class Turbo::Replay::Repo::MemoryTest < ActiveSupport::TestCase
   end
 
   test "#get_all_messages - returns an empty list if broadcasting does NOT have any message" do
-    assert_equal [], @repo.get_all_messages(broadcasting: "broadcasting")
+    assert_equal([], get_all_messages())
   end
 
   test "#get_all_messages - returns stored messages in the same order they were inserted" do
@@ -73,7 +86,7 @@ class Turbo::Replay::Repo::MemoryTest < ActiveSupport::TestCase
     insert_message
 
     contents_with_sequence_number =
-      @repo.get_all_messages(broadcasting: "broadcasting")
+      get_all_messages()
 
     sequence_numbers =
       contents_with_sequence_number.pluck(:sequence_number)
@@ -85,5 +98,9 @@ class Turbo::Replay::Repo::MemoryTest < ActiveSupport::TestCase
 
   def insert_message
     @repo.insert_message(broadcasting: "broadcasting", content: "content", retention: @retention)
+  end
+
+  def get_all_messages
+    @repo.get_all_messages(broadcasting: "broadcasting")
   end
 end

@@ -9,19 +9,19 @@ module Turbo::Replay
       end
 
       def get_current_sequence_number(broadcasting:)
-        @mutex.synchronize do
+        synchronize(broadcasting) do
           @counters.fetch(broadcasting, 0)
         end
       end
 
       def get_all_messages(broadcasting:)
-        @mutex.synchronize do
+        synchronize(broadcasting) do
           @messages.fetch(broadcasting, [])
         end
       end
 
       def insert_message(broadcasting:, content:, retention:)
-        @mutex.synchronize do
+        synchronize(broadcasting) do
           @ttl[broadcasting] =
             Time.current + retention.ttl
 
@@ -38,6 +38,24 @@ module Turbo::Replay
 
           content_with_sequence_number
         end
+      end
+
+      private
+
+      def synchronize(broadcasting)
+        @mutex.synchronize do
+          delete_cached_data_if_expired(broadcasting)
+
+          yield
+        end
+      end
+
+      def delete_cached_data_if_expired(broadcasting)
+        return if @ttl[broadcasting].nil? || @ttl[broadcasting].after?(Time.current)
+
+        @ttl.delete(broadcasting)
+        @counters.delete(broadcasting)
+        @messages.delete(broadcasting)
       end
     end
   end
