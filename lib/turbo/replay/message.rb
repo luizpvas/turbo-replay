@@ -12,7 +12,7 @@ module Turbo::Replay
           .get_all_messages(broadcasting: broadcasting)
           .sort_by(&BySequenceNumber)
 
-      return :unrecoverable if IsUnrecoverable.(sequence_number, messages)
+      return :unrecoverable if IsUnrecoverable.call(sequence_number, messages)
 
       messages.filter(&AfterSequenceNumber[sequence_number])
     end
@@ -38,7 +38,7 @@ module Turbo::Replay
 
         sequence_number < messages.first[:sequence_number] - 1
       }
-    
+
     AfterSequenceNumber =
       ->(sequence_number, content_with_sequence_number) {
         content_with_sequence_number[:sequence_number] > sequence_number

@@ -56,7 +56,7 @@ class Turbo::Replay::Repo::RedisTest < ActiveSupport::TestCase
     assert_equal(2, contents_with_sequence_number.length)
 
     sequence_numbers =
-      contents_with_sequence_number.pluck("sequence_number")
+      contents_with_sequence_number.pluck(:sequence_number)
 
     assert_equal([4, 5], sequence_numbers)
   end
@@ -125,7 +125,7 @@ class Turbo::Replay::Repo::RedisTest < ActiveSupport::TestCase
       get_all_messages
 
     sequence_numbers =
-      contents_with_sequence_number.pluck("sequence_number")
+      contents_with_sequence_number.pluck(:sequence_number)
 
     assert_equal([1, 2], sequence_numbers)
   end

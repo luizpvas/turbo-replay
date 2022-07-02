@@ -89,7 +89,34 @@ class Turbo::Replay::MessageTest < ActiveSupport::TestCase
     assert_equal(:unrecoverable, contents_with_sequence_number)
     assert_mock(@fake_repo)
   end
-  
+
+  test ".get_after_sequence_number - sorts the return value from the repository" do
+    expected_arguments =
+      {broadcasting: "broadcasting"}
+
+    return_value =
+      [
+        {sequence_number: 12, content: "content_12"},
+        {sequence_number: 10, content: "content_10"},
+        {sequence_number: 11, content: "content_11"}
+      ]
+
+    @fake_repo.expect(:get_all_messages, return_value, **expected_arguments)
+
+    contents_with_sequence_number =
+      Turbo::Replay::Message.get_after_sequence_number(broadcasting: "broadcasting", sequence_number: 10)
+
+    assert_equal(
+      [
+        {sequence_number: 11, content: "content_11"},
+        {sequence_number: 12, content: "content_12"}
+      ],
+      contents_with_sequence_number
+    )
+
+    assert_mock(@fake_repo)
+  end
+
   test ".insert - calls the repo with the correct input and returns the same value" do
     retention =
       Turbo::Replay.configuration.retention

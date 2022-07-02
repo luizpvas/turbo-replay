@@ -9,27 +9,27 @@ module Turbo::Replay
 
       def get_current_sequence_number(broadcasting:)
         counter_key =
-          FormatCounterKey.(broadcasting)
+          FormatCounterKey.call(broadcasting)
 
         @client.get(counter_key)&.to_i || 0
       end
 
       def get_all_messages(broadcasting:)
         messages_key =
-          FormatMessagesKey.(broadcasting)
+          FormatMessagesKey.call(broadcasting)
 
         @client.lrange(messages_key, 0, -1)
           .map(&SafeParseJson)
-          .filter
-          .sort_by(&BySequenceNumber)
+          .compact
+          .reverse
       end
 
       def insert_message(broadcasting:, content:, retention:)
         counter_key =
-          FormatCounterKey.(broadcasting)
+          FormatCounterKey.call(broadcasting)
 
         messages_key =
-          FormatMessagesKey.(broadcasting)
+          FormatMessagesKey.call(broadcasting)
 
         next_sequence_number =
           @client.incr(counter_key)
@@ -51,16 +51,13 @@ module Turbo::Replay
       PREFIX = "replay"
 
       FormatCounterKey =
-        lambda { "#{PREFIX}:#{_1}:counter" }
+        ->(broadcasting) { "#{PREFIX}:#{broadcasting}:counter" }
 
       FormatMessagesKey =
-        lambda { "#{PREFIX}:#{_1}:messages" }
+        ->(broadcasting) { "#{PREFIX}:#{broadcasting}:messages" }
 
       SafeParseJson =
-        lambda { JSON.parse(_1) rescue nil }
-
-      BySequenceNumber =
-        lambda { _1["sequence_number"] }
+        ->(encoded) { JSON.parse(encoded).symbolize_keys rescue nil }
     end
   end
 end
