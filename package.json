@@ -1,0 +1,10 @@
+{
+  "name": "turbo-replay",
+  "version": "0.1.0",
+  "description": "Never miss a single websocket event.",
+  "module": "app/javascript/turbo-replay/index.js",
+  "dependencies": {
+    "@hotwired/turbo": "^7.1.0",
+    "@rails/actioncable": "^7.0"
+  }
+}
