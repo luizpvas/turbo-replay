@@ -144,6 +144,7 @@ GEM
       zeitwerk (~> 2.5)
     rainbow (3.1.1)
     rake (13.0.6)
+    redis (4.7.1)
     regexp_parser (2.5.0)
     rexml (3.2.5)
     rubocop (1.29.1)
@@ -186,9 +187,10 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  simplecov (~> 0.21)
+  redis
+  simplecov
   sqlite3
-  standard (~> 1.12)
+  standard
   turbo-replay!
 
 BUNDLED WITH
