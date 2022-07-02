@@ -1,11 +1,16 @@
-require "turbo/replay/version"
-require "turbo/replay/railtie"
-
-require_relative "./replay/retention"
-require_relative "./replay/message"
-require_relative "./replay/repo/base"
-require_relative "./replay/repo/memory"
-require_relative "./replay/repo/redis"
+%w(
+  version
+  railtie
+  engine
+  retention
+  message
+  overrides/streams_channel_broadcast
+  repo/base
+  repo/memory
+  repo/redis
+).each do |dependency|
+  require "turbo/replay/#{dependency}"
+end
 
 module Turbo
   module Replay
