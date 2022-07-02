@@ -24,6 +24,8 @@ module Turbo
     mattr_accessor :configuration
     self.configuration = Configuration.new
 
-    def self.configure = yield(configuration)
+    def self.configure
+      yield(configuration)
+    end
   end
 end
