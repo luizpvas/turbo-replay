@@ -27,16 +27,16 @@ module Turbo::Replay
 
     private
 
+    BySequenceNumber =
+      ->(content_with_sequence_number) {
+        content_with_sequence_number[:sequence_number]
+      }
+
     IsUnrecoverable =
       ->(sequence_number, messages) {
         return false if messages.empty?
 
         sequence_number < messages.first[:sequence_number] - 1
-      }
-
-    BySequenceNumber =
-      ->(content_with_sequence_number) {
-        content_with_sequence_number[:sequence_number]
       }
     
     AfterSequenceNumber =
