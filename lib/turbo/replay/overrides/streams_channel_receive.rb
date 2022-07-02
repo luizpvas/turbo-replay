@@ -1,6 +1,6 @@
 module Turbo::Replay
   module Overrides
-    module StreamsChannelReceived
+    module StreamsChannelReceive
       GetCurrentSequenceNumber =
         lambda do |broadcasting, _params|
           sequence_number =

@@ -9,7 +9,7 @@ module Turbo::Replay
 
       class Turbo::StreamsChannel
         extend Overrides::StreamsChannelBroadcast
-        prepend Overrides::StreamsChannelReceived
+        prepend Overrides::StreamsChannelReceive
       end
     end
   end
