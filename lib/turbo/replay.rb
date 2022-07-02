@@ -5,6 +5,7 @@
   retention
   message
   overrides/streams_channel_broadcast
+  overrides/streams_channel_received
   repo/base
   repo/memory
   repo/redis
