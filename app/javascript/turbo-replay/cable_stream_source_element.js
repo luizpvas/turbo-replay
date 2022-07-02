@@ -19,10 +19,12 @@ class TurboCableStreamSourceElement extends HTMLElement {
 
   fetchSequenceNumber() {
     console.log('fetch sequence number')
-    console.log(this.subscription.send({run: 'fetch_sequence_number'}))
+    console.log(this.subscription.send({cmd: 'get_current_sequence_number'}))
   }
 
   dispatchMessageEvent(data) {
+    console.log("data", data);
+
     const event = new MessageEvent("message", { data: data.data })
     return this.dispatchEvent(event)
   }
