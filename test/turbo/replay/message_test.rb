@@ -117,6 +117,13 @@ class Turbo::Replay::MessageTest < ActiveSupport::TestCase
     assert_mock(@fake_repo)
   end
 
+  test ".get_after_sequence_number - returns an empty list if sequence number is nil" do
+    contents_with_sequence_number =
+      Turbo::Replay::Message.get_after_sequence_number(broadcasting: "broadcasting", sequence_number: nil)
+
+    assert_equal([],  contents_with_sequence_number)
+  end
+
   test ".insert - calls the repo with the correct input and returns the same value" do
     retention =
       Turbo::Replay.configuration.retention

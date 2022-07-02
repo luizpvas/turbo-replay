@@ -7,6 +7,8 @@ module Turbo::Replay
     end
 
     def get_after_sequence_number(broadcasting:, sequence_number:)
+      return [] if sequence_number.nil?
+
       messages =
         Turbo::Replay.configuration.repo
           .get_all_messages(broadcasting: broadcasting)
