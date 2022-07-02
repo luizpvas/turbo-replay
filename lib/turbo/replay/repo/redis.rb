@@ -57,7 +57,13 @@ module Turbo::Replay
         ->(broadcasting) { "#{PREFIX}:#{broadcasting}:messages" }
 
       SafeParseJson =
-        ->(encoded) { JSON.parse(encoded).symbolize_keys rescue nil }
+        ->(encoded) do
+          begin
+            JSON.parse(encoded).symbolize_keys
+          rescue
+            nil
+          end
+        end
     end
   end
 end
