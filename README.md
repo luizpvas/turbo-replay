@@ -14,7 +14,7 @@ messages in the same order they were originally sent.
 gem "turbo-replay"
 ```
 
-2. Execute the following commands to install the gem and generate an initializer:
+2. Run the following commands to install the gem and generate the initializer:
 
 ```bash
 $ bin/bundle install
@@ -39,21 +39,20 @@ window.addEventListener('turbo-replay:connected', (ev) => {
 })
 
 // The user disconnected from a channel and we're retrying to reconnect.
-// It's good to show some 'reconnecting...' indication here.
+// It's good to show a visual 'reconnecting...' indication somewhere in your app.
 window.addEventListener('turbo-replay:disconnected', (ev) => {
   console.log('disconnected', ev.detail.channel)
 })
 
 // The user reconnected after being offline a little bit.
-// Hide the 'reconnecting...' indicationk here.
+// Hide the visual 'reconnecting...' indication here.
 window.addEventListener('turbo-replay:reconnected', (ev) => {
   console.log('reconnected', ev.detail.channel)
 })
 
 // The user reconnected, but the latest received message was older
 // than the oldest message in the cache. There's nothing we can do
-// here to recover the state. You can reload the whole application
-// or show some indication asking the user to reload.
+// to recover the state here.
 window.addEventListener('turbo-replay:unrecoverable', (ev) => {
   console.log('unrecoverable', ev.detail.channel)
 })
@@ -66,10 +65,8 @@ window.addEventListener('turbo-replay:unrecoverable', (ev) => {
 Because the sequence number is sequential, clients know what the next value is expected to be.
 If an arrived `sequence_number` doesn't match the expected value, it means the client missed a message.
 
-> The sequence number ensures clients can detect missed messages even without a disconnect event.
-
-When the client notices they missed an event, they ask the server to resend messages after the last known
-sequence number.
+When the client notices they missed an event, either by an unexpected sequence number of disconnect event,
+they ask the server to resend messages since the last known sequence number.
 
 ### I like to broadcast lots of stuff, isn't the cache too much overhead?
 
@@ -80,7 +77,7 @@ application to tweak the cache's retention policy.
 
 There's nothing we can do if the client's latest received message is older than the oldest message in the cache.
 
-Suggestion: handle the `turbo-replay:unrecoverable` event and display a message asking the user
+That said, you should handle the `turbo-replay:unrecoverable` event and display a message asking the user
 to reload the app. For example:
 
 ```js
