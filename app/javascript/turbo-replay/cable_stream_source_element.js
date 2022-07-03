@@ -9,7 +9,8 @@ class TurboCableStreamSourceElement extends HTMLElement {
     connectStreamSource(this)
 
     this.subscription = await subscribeTo(this.channel, {
-      connected: this.fetchSequenceNumber.bind(this),
+      connected: this.handleConnected.bind(this),
+      disconnected: this.handleDisconnected.bind(this),
       received: this.handleMessage.bind(this)
     })
   }
@@ -19,13 +20,19 @@ class TurboCableStreamSourceElement extends HTMLElement {
     if (this.subscription) this.subscription.unsubscribe()
   }
 
-  fetchSequenceNumber() {
+  handleConnected(ev) {
+    this.dispatchConnectionEvent(this.connectedOnce ? "turbo-replay:reconnected" : "turbo-replay:connected")
+
     if (this.sequenceNumber && this.connectedOnce !== undefined) {
       this.replayMissedMessages()
       return
     }
 
     this.subscription.send({cmd: "get_current_sequence_number"})
+  }
+
+  handleDisconnected(ev) {
+    this.dispatchConnectionEvent("turbo-replay:disconnected")
   }
 
   replayMissedMessages() {
@@ -63,7 +70,7 @@ class TurboCableStreamSourceElement extends HTMLElement {
     }
 
     if (result  === UNRECOVERABLE_RESULT) {
-      return this.dispatchUnrecoverableEvent()
+      return this.dispatchConnectionEvent("turbo-replay:unrecoverable")
     }
 
     throw new Error(`Unexpected result from get_messages_after_sequence_number: ${result}`)
@@ -91,9 +98,9 @@ class TurboCableStreamSourceElement extends HTMLElement {
     )
   }
 
-  dispatchUnrecoverableEvent() {
+  dispatchConnectionEvent(eventName) {
     return this.dispatchEvent(
-      new CustomEvent("turbo-replay:unrecoverable", {detail: {channel: this.channel}, bubbles: true})
+      new CustomEvent(eventName, {detail: {channel: this.channel}, bubbles: true})
     )
   }
 

@@ -25,7 +25,36 @@ Replace the import for `@hotwired/turbo-rails` in your application.js
 + import "turbo-replay"
 ```
 
-Now reload your server and that's it!
+Now reload your server - and that's it!
+
+### Javascript events
+
+```javascript
+// The user connected for the first time to a channel.
+window.addEventListener('turbo-replay:connected', (ev) => {
+  console.log('connected', ev.detail.channel)
+})
+
+// The user disconnected from a channel and we're retrying to reconnect.
+// It's good to show some 'reconnecting...' indication here.
+window.addEventListener('turbo-replay:disconnected', (ev) => {
+  console.log('disconnected', ev.detail.channel)
+})
+
+// The user reconnected after being offline a little bit.
+// Hide the 'reconnecting...' indicationk here.
+window.addEventListener('turbo-replay:reconnected', (ev) => {
+  console.log('reconnected', ev.detail.channel)
+})
+
+// The user reconnected, but the latest received message was older
+// than the oldest message in the cache. There's nothing we can do
+// here to recover the state. You can reload the whole application
+// or show some indication asking the user to reload.
+window.addEventListener('turbo-replay:unrecoverable', (ev) => {
+  console.log('unrecoverable', ev.detail.channel)
+})
+```
 
 ### How does it work?
 
