@@ -1,8 +1,8 @@
 # turbo-replay
 
-**turbo-replay** assigns a sequence number to broadcasted messages and caches them. When a client 
-disconnects because of flaky network, we're able to resend (or replay, hence the name) missed
-messages in the same order they were originally sent.
+**turbo-replay** assigns a sequence number to broadcasted messages and caches them. When a client
+reconnects after losing their network connectivity, the server re-sends (or replays, hence the name)
+missed messages in the same order they were originally sent.
 
 ## Installation
 
@@ -68,7 +68,7 @@ If an arrived `sequence_number` doesn't match the expected value, it means the c
 When the client notices they missed an event, either by an unexpected sequence number or disconnect event,
 they ask the server to resend messages since the last known sequence number.
 
-### I like to broadcast lots of stuff, isn't the cache too much overhead?
+### I like to broadcast lots of stuff. Isn't the cache too much overhead?
 
 Maybe, it depends on your use case. Take a look at `config/initializers/turbo_replay.rb` in your
 application to tweak the cache's retention policy.
