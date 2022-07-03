@@ -6,7 +6,7 @@ messages in the same order they were originally sent.
 
 ## Installation
 
-> **Important**: Make sure you installed [`hotwired/turbo-rails`](https://github.com/hotwired/turbo-rails) before this gem!
+> **Important**: Make sure you have installed [`hotwired/turbo-rails`](https://github.com/hotwired/turbo-rails) before using this gem!
 
 Add this line to your application's Gemfile:
 
