@@ -4,7 +4,7 @@ require "redis"
 class Turbo::Replay::Repo::RedisTest < ActiveSupport::TestCase
   setup do
     client =
-      Redis.new(host: ENV['REDIS_HOST'], port: ENV['REDIS_PORT'])
+      Redis.new(host: ENV["REDIS_HOST"], port: ENV["REDIS_PORT"])
 
     @repo =
       Turbo::Replay::Repo::Redis.new(client: client)
