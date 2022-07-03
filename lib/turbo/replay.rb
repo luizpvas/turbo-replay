@@ -1,6 +1,5 @@
 %w[
   version
-  railtie
   engine
   retention
   message
