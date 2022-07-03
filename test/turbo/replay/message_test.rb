@@ -121,7 +121,7 @@ class Turbo::Replay::MessageTest < ActiveSupport::TestCase
     contents_with_sequence_number =
       Turbo::Replay::Message.get_after_sequence_number(broadcasting: "broadcasting", sequence_number: nil)
 
-    assert_equal([],  contents_with_sequence_number)
+    assert_equal([], contents_with_sequence_number)
   end
 
   test ".insert - calls the repo with the correct input and returns the same value" do

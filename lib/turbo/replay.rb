@@ -1,4 +1,4 @@
-%w(
+%w[
   version
   railtie
   engine
@@ -9,7 +9,7 @@
   repo/base
   repo/memory
   repo/redis
-).each do |dependency|
+].each do |dependency|
   require "turbo/replay/#{dependency}"
 end
 

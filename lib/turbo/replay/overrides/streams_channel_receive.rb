@@ -32,7 +32,7 @@ module Turbo::Replay
         broadcasting =
           self.class.verified_stream_name(params[:signed_stream_name])
 
-        transmit(cmd_handler.(broadcasting, data)) if cmd_handler.present?
+        transmit(cmd_handler.call(broadcasting, data)) if cmd_handler.present?
       end
     end
   end
