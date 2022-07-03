@@ -6,29 +6,29 @@ messages in the same order they were originally sent.
 
 ## Installation
 
-> **Important**: Make sure you have installed [`hotwired/turbo-rails`](https://github.com/hotwired/turbo-rails) before using this gem!
+> **Important**: Make sure you have [`hotwired/turbo-rails`](https://github.com/hotwired/turbo-rails) installed before using this gem!
 
-Add this line to your application's Gemfile:
+1. Add this line to your application's Gemfile:
 
 ```ruby
 gem "turbo-replay"
 ```
 
-Execute the following commands to install the gem and generate an initializer:
+2. Execute the following commands to install the gem and generate an initializer:
 
 ```bash
 $ bin/bundle install
 $ bin/rails turbo-replay:install
 ```
 
-Replace the import for `@hotwired/turbo-rails` in your application.js
+3. Replace the import for `@hotwired/turbo-rails` in your application.js
 
 ```diff
 - import "@hotwired/turbo-rails"
 + import "turbo-replay"
 ```
 
-Now reload your server - and that's it!
+4. Reload your server - and that's it!
 
 ### Javascript events
 
