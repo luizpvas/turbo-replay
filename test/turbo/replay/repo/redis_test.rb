@@ -3,13 +3,16 @@ require "redis"
 
 class Turbo::Replay::Repo::RedisTest < ActiveSupport::TestCase
   setup do
+    client =
+      Redis.new(host: ENV['REDIS_HOST'], port: ENV['REDIS_PORT'])
+
     @repo =
-      Turbo::Replay::Repo::Redis.new(client: Redis.new)
+      Turbo::Replay::Repo::Redis.new(client: client)
 
     @retention =
       Turbo::Replay::Retention.new(ttl: 30.minutes, size: 50)
 
-    delete_all_from_redis(@repo.client)
+    delete_all_from_redis(client)
   end
 
   test "#insert_message - inserts the first message for a broadcasting" do
