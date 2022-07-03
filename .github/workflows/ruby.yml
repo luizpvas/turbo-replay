@@ -17,6 +17,8 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+        ports:
+          - 6379:6379
     steps:
       - uses: actions/checkout@v3
       - name: set up ruby
@@ -27,8 +29,5 @@ jobs:
         run: bundle install
       - name: run tests
         run: bin/test
-        env:
-          REDIS_HOST: redis
-          REDIS_PORT: 6379
       - name: run linter
         run: bundle exec rake standard
