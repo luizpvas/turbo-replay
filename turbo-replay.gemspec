@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.email = ["luizpvasc@gmail.com"]
   spec.homepage = "https://github.com/luizpvas/turbo-replay"
   spec.summary = "Never miss a single websocket event ever again."
-  spec.description = "Turbo-Replay caches events sent to channels and re-sends them in order when clients have flaky network."
+  spec.description = "turbo-replay assigns a sequence number to broadcasted messages and caches them. When a client disconnects because of flaky network, we're able to resend (or replay, hence the name) missed messages in the same order they were originally sent."
   spec.license = "MIT"
 
   spec.required_ruby_version = ">= 2.6.0"
