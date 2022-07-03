@@ -65,7 +65,7 @@ window.addEventListener('turbo-replay:unrecoverable', (ev) => {
 Because the sequence number is sequential, clients know what the next value is expected to be.
 If an arrived `sequence_number` doesn't match the expected value, it means the client missed a message.
 
-When the client notices they missed an event, either by an unexpected sequence number of disconnect event,
+When the client notices they missed an event, either by an unexpected sequence number or disconnect event,
 they ask the server to resend messages since the last known sequence number.
 
 ### I like to broadcast lots of stuff, isn't the cache too much overhead?
