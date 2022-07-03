@@ -61,10 +61,9 @@ window.addEventListener('turbo-replay:unrecoverable', (ev) => {
 
 ### How does it work?
 
-turbo-replay intercepts broadcast calls and stores messages in a cache. Each message is assigned
-a sequence number. This value is unique per channel.
+**turbo-replay** stores broadcasted messages in a cache. Each message is assigned a sequence number.
 
-Because the sequence number is sequential, clients knows what the next value is expected to be.
+Because the sequence number is sequential, clients know what the next value is expected to be.
 If an arrived `sequence_number` doesn't match the expected value, it means the client missed a message.
 
 > The sequence number ensures clients can detect missed messages even without a disconnect event.
@@ -74,18 +73,19 @@ sequence number.
 
 ### I like to broadcast lots of stuff, isn't the cache too much overhead?
 
-Maybe, depends on your use case. You have two controls over the retention: time and size.
-Take a look at `config/initializers/turbo_replay.rb` to tweak the retention.
+Maybe, it depends on your use case. Take a look at `config/initializers/turbo_replay.rb` in your
+application to tweak the cache's retention policy.
 
 ### What if the client stays offline too long?
 
 There's nothing we can do if the client's latest received message is older than the oldest message in the cache.
 
-There's an event you can hook into to display some alert to the user:
+Suggestion: handle the `turbo-replay:unrecoverable` event and display a message asking the user
+to reload the app. For example:
 
 ```js
 window.addEventListener('turbo-replay:unrecoverable', () => {
-  console.log("You're offline for too long. Please reload the page.")
+  window.alert("You're offline for too long. Please reload the page.")
 })
 ```
 
