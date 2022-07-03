@@ -1,6 +1,6 @@
 {
   "name": "turbo-replay",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Never miss a single websocket event.",
   "module": "app/javascript/turbo-replay/index.js",
   "dependencies": {
