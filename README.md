@@ -5,6 +5,9 @@ disconnects because of flaky network, we're able to resend (or replay, hence the
 messages in the same order they were originally sent.
 
 ## Installation
+
+> **Important**: Make sure you installed [`hotwired/turbo-rails`](https://github.com/hotwired/turbo-rails) before this gem!
+
 Add this line to your application's Gemfile:
 
 ```ruby
