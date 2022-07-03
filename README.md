@@ -17,8 +17,8 @@ gem "turbo-replay"
 Execute the following commands to install the gem and generate an initializer:
 
 ```bash
-$ bundle install
-$ bundle exec turbo-replay:install
+$ bin/bundle install
+$ bin/rails turbo-replay:install
 ```
 
 Replace the import for `@hotwired/turbo-rails` in your application.js
