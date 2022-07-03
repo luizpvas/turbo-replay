@@ -6,7 +6,7 @@ module Turbo::Replay
           sequence_number =
             Message.get_current_sequence_number(broadcasting: broadcasting)
 
-          {sequence_number: sequence_number}
+          {get_current_sequence_number: sequence_number}
         end
 
       GetMessagesAfterSequenceNumber =
@@ -17,17 +17,17 @@ module Turbo::Replay
               sequence_number: params["sequence_number"]&.to_i
             )
 
-          {messages: messages}
+          {get_messages_after_sequence_number: messages}
         end
 
-      COMMANDS = {
+      CMD_HANDLERS = {
         "get_current_sequence_number" => GetCurrentSequenceNumber,
-        "get_messages_after_sequence_number": GetMessagesAfterSequenceNumber
+        "get_messages_after_sequence_number" => GetMessagesAfterSequenceNumber
       }.freeze
 
       def receive(data)
         cmd_handler =
-          COMMANDS[data["cmd"]]
+          CMD_HANDLERS[data["cmd"]]
 
         broadcasting =
           self.class.verified_stream_name(params[:signed_stream_name])
