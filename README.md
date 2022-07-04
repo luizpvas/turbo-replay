@@ -4,11 +4,11 @@
 reconnects after losing their network connectivity, the server re-sends (or replays, hence the name)
 missed messages in the same order they were originally sent.
 
-> If you're into videos, I have recorded a screencast showcasing this library: [https://www.youtube.com/watch?v=alBat4DWbdI](https://www.youtube.com/watch?v=alBat4DWbdI)
+> :play_or_pause_button: :play_or_pause_button: If you're into videos, I have recorded a screencast showcasing this library: [https://www.youtube.com/watch?v=alBat4DWbdI](https://www.youtube.com/watch?v=alBat4DWbdI)
 
 ## Installation
 
-> **Important**: Make sure you have [`hotwired/turbo-rails`](https://github.com/hotwired/turbo-rails) installed before using this gem!
+**Important**: Make sure you have [`hotwired/turbo-rails`](https://github.com/hotwired/turbo-rails) installed before using this gem!
 
 1. Add this line to your application's Gemfile:
 
