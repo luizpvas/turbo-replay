@@ -20,8 +20,11 @@ module Turbo::Replay
       LUA
 
       def initialize(client:)
-        @client = client
-        @insert_message_script_sha = @client.script(:load, INSERT_MESSAGE_LUA_SCRIPT)
+        @client =
+          client
+
+        @insert_message_script_sha =
+          @client.script(:load, INSERT_MESSAGE_LUA_SCRIPT)
       end
 
       def get_current_sequence_number(broadcasting:)
@@ -42,52 +45,6 @@ module Turbo::Replay
       end
 
       def insert_message(broadcasting:, content:, retention:)
-        counter_key =
-          FormatCounterKey.call(broadcasting)
-
-        messages_key =
-          FormatMessagesKey.call(broadcasting)
-
-        next_sequence_number =
-          @client.incr(counter_key)
-
-        content_with_sequence_number =
-          {sequence_number: next_sequence_number, content: content}
-
-        @client.lpush(messages_key, content_with_sequence_number.to_json)
-        @client.ltrim(messages_key, 0, retention.size - 1)
-
-        @client.expire(counter_key, retention.ttl)
-        @client.expire(messages_key, retention.ttl)
-
-        content_with_sequence_number
-      end
-
-      def insert_message_multi(broadcasting:, content:, retention:)
-        counter_key =
-          FormatCounterKey.call(broadcasting)
-
-        messages_key =
-          FormatMessagesKey.call(broadcasting)
-
-        next_sequence_number =
-          @client.incr(counter_key)
-
-        content_with_sequence_number =
-          {sequence_number: next_sequence_number, content: content}
-
-        @client.multi do |multi|
-          multi.lpush(messages_key, content_with_sequence_number.to_json)
-          multi.ltrim(messages_key, 0, retention.size - 1)
-
-          multi.expire(counter_key, retention.ttl)
-          multi.expire(messages_key, retention.ttl)
-        end
-
-        content_with_sequence_number
-      end
-
-      def insert_message_lua(broadcasting:, content:, retention:)
         counter_key =
           FormatCounterKey.call(broadcasting)
 
