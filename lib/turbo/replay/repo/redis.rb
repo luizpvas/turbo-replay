@@ -3,8 +3,25 @@ module Turbo::Replay
     class Redis < Base
       attr_reader :client
 
+      INSERT_MESSAGE_LUA_SCRIPT = <<-LUA
+        local sequence_number =
+          redis.call('INCR', KEYS[1])
+
+        local content_with_sequence_number =
+          cjson.encode({ sequence_number=sequence_number, content=KEYS[5] })
+
+        redis.call('LPUSH', KEYS[2], content_with_sequence_number)
+        redis.call('LTRIM', KEYS[2], 0, KEYS[3] - 1)
+
+        redis.call('EXPIRE', KEYS[1], KEYS[4])
+        redis.call('EXPIRE', KEYS[2], KEYS[4])
+
+        return sequence_number
+      LUA
+
       def initialize(client:)
         @client = client
+        @insert_message_script_sha = @client.script(:load, INSERT_MESSAGE_LUA_SCRIPT)
       end
 
       def get_current_sequence_number(broadcasting:)
@@ -44,6 +61,46 @@ module Turbo::Replay
         @client.expire(messages_key, retention.ttl)
 
         content_with_sequence_number
+      end
+
+      def insert_message_multi(broadcasting:, content:, retention:)
+        counter_key =
+          FormatCounterKey.call(broadcasting)
+
+        messages_key =
+          FormatMessagesKey.call(broadcasting)
+
+        next_sequence_number =
+          @client.incr(counter_key)
+
+        content_with_sequence_number =
+          {sequence_number: next_sequence_number, content: content}
+
+        @client.multi do |multi|
+          multi.lpush(messages_key, content_with_sequence_number.to_json)
+          multi.ltrim(messages_key, 0, retention.size - 1)
+
+          multi.expire(counter_key, retention.ttl)
+          multi.expire(messages_key, retention.ttl)
+        end
+
+        content_with_sequence_number
+      end
+
+      def insert_message_lua(broadcasting:, content:, retention:)
+        counter_key =
+          FormatCounterKey.call(broadcasting)
+
+        messages_key =
+          FormatMessagesKey.call(broadcasting)
+
+        script_args =
+          [counter_key, messages_key, retention.size, retention.ttl, content]
+
+        sequence_number =
+          @client.evalsha(@insert_message_script_sha, script_args)
+
+        {sequence_number: sequence_number, content: content}
       end
 
       private

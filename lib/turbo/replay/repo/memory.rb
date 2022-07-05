@@ -1,7 +1,8 @@
 module Turbo::Replay
   module Repo
     class Memory < Base
-      def initialize
+      def initialize(synchronized: true)
+        @synchronized = synchronized
         @mutex = Mutex.new
         @counters = {}
         @messages = {}
@@ -43,6 +44,8 @@ module Turbo::Replay
       private
 
       def synchronize(broadcasting)
+        return yield unless @synchronized
+
         @mutex.synchronize do
           delete_cached_data_if_expired(broadcasting)
 
