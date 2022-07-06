@@ -23,7 +23,7 @@ module Turbo::Replay
         @client =
           client
 
-        @insert_script_sha =
+        @insert_script_digest =
           @client.script(:load, INSERT_SCRIPT)
       end
 
@@ -55,7 +55,7 @@ module Turbo::Replay
           [counter_key, messages_key, retention.size, retention.ttl, content]
 
         sequence_number =
-          @client.evalsha(@insert_script_sha, script_args)
+          @client.evalsha(@insert_script_digest, script_args)
 
         {sequence_number: sequence_number, content: content}
       end
