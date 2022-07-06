@@ -3,7 +3,7 @@ module Turbo::Replay
     class Redis < Base
       attr_reader :client
 
-      INSERT_MESSAGE_LUA_SCRIPT = <<-LUA
+      INSERT_SCRIPT = <<-LUA
         local sequence_number =
           redis.call('INCR', KEYS[1])
 
@@ -23,8 +23,8 @@ module Turbo::Replay
         @client =
           client
 
-        @insert_message_script_sha =
-          @client.script(:load, INSERT_MESSAGE_LUA_SCRIPT)
+        @insert_script_sha =
+          @client.script(:load, INSERT_SCRIPT)
       end
 
       def get_current_sequence_number(broadcasting:)
@@ -55,7 +55,7 @@ module Turbo::Replay
           [counter_key, messages_key, retention.size, retention.ttl, content]
 
         sequence_number =
-          @client.evalsha(@insert_message_script_sha, script_args)
+          @client.evalsha(@insert_script_sha, script_args)
 
         {sequence_number: sequence_number, content: content}
       end
